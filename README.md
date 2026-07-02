@@ -22,11 +22,13 @@ reset. So it pins core to `v1.2.0` in [`apps.yaml`](apps.yaml) and declares
 
 Same as any TaskMaster-C3 app — no core to compile, nothing hosted:
 
-- **CI:** push → GitHub Actions builds a `.bin` (`.github/workflows/build.yml`).
-- **Local build:** `idf.py set-target esp32c3 && idf.py build` (ESP-IDF v6.0.1).
-- **Flash (USB, esptool only):** `python tools/flash.py`
-- **Update over your LAN:** `python tools/ota_serve.py`, then point the device's `fw_url`
-  at it (Settings → Web config) → Settings → Check update.
+- **CI / local build** produces two files: **`firmware-merged.bin`** (first USB flash) and
+  **`taskmaster_c3_app.bin`** (OTA). Use the right one:
+- **First flash (USB):** `python tools/flash.py --bin firmware-merged.bin` (or bare
+  `python tools/flash.py` for a local build).
+- **Update over your LAN (OTA):** `python tools/ota_serve.py --bin taskmaster_c3_app.bin` (or
+  bare for a local build), then point the device's `fw_url` at the URL it prints
+  (Settings → Web config) → Settings → Check update.
 
 ## Make your own app
 
