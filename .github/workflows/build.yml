@@ -36,15 +36,17 @@ jobs:
             idf.py build &&
             idf.py merge-bin -o firmware-merged.bin
 
-      - name: Collect .bin artifacts
+      - name: Collect firmware
         run: |
           mkdir -p out
-          cp build/*.bin out/ 2>/dev/null || true
+          # the single flashable image (python tools/flash.py --bin <file>) ...
           cp firmware-merged.bin out/ 2>/dev/null || cp build/firmware-merged.bin out/ 2>/dev/null || true
+          # ... and the app image alone (for LAN OTA via tools/ota_serve.py)
+          cp build/taskmaster_c3_app.bin out/ 2>/dev/null || true
           ls -la out
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: firmware
           path: out/*.bin
